@@ -1,79 +1,85 @@
 import tkinter as tk
 
+# Create main window
+root = tk.Tk()
+root.title('Calculator')
 
-def calculate():
-    num1 = int(entry_num1.get())
-    num2 = int(entry_num2.get())
-    operator = entry_operator.get()
-    if operator == '+':
-        result = num1 + num2
-    elif operator == '-':
-        result = num1 - num2
-    elif operator == '*':
-        result = num1 * num2
-    elif operator == '/':
-        if num2 != 0:
-            result = num1 / num2
-        else:
-            msg = "Error: Division by zero is undefined"
-            results_box.delete(1.0, tk.END)
-            results_box.insert(tk.END, msg)
-            return
+# Create button frame
+buttons_frame = tk.Frame(root)
+buttons_frame.pack()
+
+# Create frame for result display
+result_frame = tk.Frame(root)
+result_frame.pack(side = 'top', fill = 'x')
+
+# Create variable for storing equation as string
+equation = tk.StringVar()
+equation.set("0")
+
+# Create screen on the calculator where equation and result are displayed
+result_screen = tk.Label(result_frame, textvariable = equation, height=3)
+result_screen.pack()
+
+# Create function to update equation and calculate result
+def button_click(value):
+    current = equation.get()
+    if current == "0" or current == "Error: Division by zero is undefined" or current == "Error: Invalid operator":
+        current = ""
+    if value == "=":
+        try:
+            total = str(eval(current))
+            equation.set(total)
+        except ZeroDivisionError:
+            equation.set("Error: Division by zero is undefined")
+        except:
+            equation.set("Error: Invalid operator")
+    elif value == "C":
+        equation.set("0")
+    elif value == "Del":
+        # delete the last character of the current value
+        equation.set(current[:-1])
+    elif value == "-/+":
+        # inverse the current value
+        try:
+            inversed_value = -float(current)
+            equation.set(str(inversed_value))
+        except ValueError:
+            # if the current value is not a number, just keep it as it is
+            pass
     else:
-        msg = "Error: Invalid operator"
-        results_box.delete(1.0, tk.END)
-        results_box.insert(tk.END, msg)
-        return
+        current += value
+        equation.set(current)
 
-    msg = f"{num1} {operator} {num2} = {result}"
-    results_box.delete(1.0, tk.END)
-    results_box.insert(tk.END, msg)
+# Create calculator buttons
+btn_values = [
+    ['C', '-/+', 'Del'],
+    ['7', '8', '9', '/'],
+    ['4', '5', '6', '*'],
+    ['1', '2', '3', '-'],
+    ['.', '0', '=', '+'],
+]
 
-window = tk.Tk()
+for row in btn_values:
+    row_frame = tk.Frame(buttons_frame)
+    row_frame.pack(side = 'top', fill = 'x')
+    for btn_val in row:
+        button = tk.Button(row_frame, text = str(btn_val), width = 5, command = lambda btn_val=btn_val: button_click(str(btn_val)))
+        button.pack(side = 'left')
 
-tk.Label(window, text="Enter number 1:").pack()
-entry_num1 = tk.Entry(window)
-entry_num1.pack()
+# Run the application
+root.mainloop()
 
-tk.Label(window, text="Enter operator:").pack()
-entry_operator = tk.Entry(window)
-entry_operator.pack()
+# Create separate launch window
+launch_win = tk.Tk()
+launch_win.title('Launch Calculator')
 
-tk.Label(window, text="Enter number 2:").pack()
-entry_num2 = tk.Entry(window)
-entry_num2.pack()
+# Function to run the calculator code
+def run_calculator():
+    exec(open('main.py').read())
 
-tk.Button(window, text="Calculate", command=calculate).pack()
+# Create button to run the calculator
+launch_button = tk.Button(launch_win, text='Launch Calculator', command=run_calculator)
+launch_button.pack()
 
-results_box = tk.Text(window, height=2, width=30)
-results_box.pack()
-
-window.mainloop()
-
-
-
-
-def calculator():
-    num1 = int(input("Enter the first number: "))
-    operator = input("Enter an operator (+, -, *, /): ")
-    num2 = int(input("Enter the second number: "))
-
-    if operator == '+':
-        result = num1 + num2
-    elif operator == '-':
-        result = num1 - num2
-    elif operator == '*':
-        result = num1 * num2
-    elif operator == '/':
-        if num2 != 0:
-            result = num1 / num2
-        else:
-            print("Error: Division by zero is undefined")
-            return
-    else:
-        print("Error: Invalid operator")
-        return
-
-    print(f"{num1} {operator} {num2} = {result}")
-
-calculator()
+# Run the application
+launch_win.mainloop()
