@@ -1,0 +1,79 @@
+import tkinter as tk
+
+
+def calculate():
+    num1 = int(entry_num1.get())
+    num2 = int(entry_num2.get())
+    operator = entry_operator.get()
+    if operator == '+':
+        result = num1 + num2
+    elif operator == '-':
+        result = num1 - num2
+    elif operator == '*':
+        result = num1 * num2
+    elif operator == '/':
+        if num2 != 0:
+            result = num1 / num2
+        else:
+            msg = "Error: Division by zero is undefined"
+            results_box.delete(1.0, tk.END)
+            results_box.insert(tk.END, msg)
+            return
+    else:
+        msg = "Error: Invalid operator"
+        results_box.delete(1.0, tk.END)
+        results_box.insert(tk.END, msg)
+        return
+
+    msg = f"{num1} {operator} {num2} = {result}"
+    results_box.delete(1.0, tk.END)
+    results_box.insert(tk.END, msg)
+
+window = tk.Tk()
+
+tk.Label(window, text="Enter number 1:").pack()
+entry_num1 = tk.Entry(window)
+entry_num1.pack()
+
+tk.Label(window, text="Enter operator:").pack()
+entry_operator = tk.Entry(window)
+entry_operator.pack()
+
+tk.Label(window, text="Enter number 2:").pack()
+entry_num2 = tk.Entry(window)
+entry_num2.pack()
+
+tk.Button(window, text="Calculate", command=calculate).pack()
+
+results_box = tk.Text(window, height=2, width=30)
+results_box.pack()
+
+window.mainloop()
+
+
+
+
+def calculator():
+    num1 = int(input("Enter the first number: "))
+    operator = input("Enter an operator (+, -, *, /): ")
+    num2 = int(input("Enter the second number: "))
+
+    if operator == '+':
+        result = num1 + num2
+    elif operator == '-':
+        result = num1 - num2
+    elif operator == '*':
+        result = num1 * num2
+    elif operator == '/':
+        if num2 != 0:
+            result = num1 / num2
+        else:
+            print("Error: Division by zero is undefined")
+            return
+    else:
+        print("Error: Invalid operator")
+        return
+
+    print(f"{num1} {operator} {num2} = {result}")
+
+calculator()
