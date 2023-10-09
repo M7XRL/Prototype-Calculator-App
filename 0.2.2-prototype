@@ -1,0 +1,92 @@
+Python is being used
+
+import tkinter as tk
+
+
+def color_window():
+    top = tk.Toplevel(root)
+    top.title('Cölors')
+
+    # Separate button creation
+    tk.Button(top, text="Black").pack()
+    tk.Button(top, text="White").pack()
+    tk.Button(top, text="Gray").pack()
+    tk.Button(top, text="WIP").pack()
+    tk.Button(top, text="Close Coľor", command=top.destroy).pack()  
+
+# New Window for Style
+def button_2_window():
+    top = tk.Toplevel(root)
+    top.title('Stylê')
+    tk.Button(top, text="Default").pack()
+    tk.Button(top, text="Rounded").pack()
+
+def new_window():
+    top = tk.Toplevel(root)
+    top.title('SETTINGS')
+
+    # add 3 buttons in the new window
+    tk.Button(top, text="Cölor", command=color_window).pack()
+    tk.Button(top, text="Stylê", command=button_2_window).pack()
+    tk.Button(top, text="Close Settings", command=top.destroy).pack()
+
+root = tk.Tk()
+root.title('Kalculatór')
+
+buttons_frame = tk.Frame(root)
+buttons_frame.pack()
+
+result_frame = tk.Frame(root)
+result_frame.pack(side = 'top', fill = 'x')
+
+equation = tk.StringVar()
+equation.set("0")
+
+result_screen = tk.Label(result_frame, textvariable = equation, height=3)
+result_screen.pack()
+
+def button_click(value):
+    current = equation.get()
+    if current == "0" or current == "Error: Division by zero is undefined" or current == "Error: Invalid operator":
+        current = ""
+    if value == "=":
+        try:
+            total = str(eval(current))
+            equation.set(total)
+        except ZeroDivisionError:
+            equation.set("Error: Division by zero is undefined")
+        except:
+            equation.set("Error: Invalid operator")
+    elif value == "C":
+        equation.set("0")
+    elif value == "Del":
+        equation.set(current[:-1])
+    elif value == "-/+":
+        try:
+            inversed_value = -float(current)
+            equation.set(str(inversed_value))
+        except ValueError:
+            pass
+    else:
+        current += value
+        equation.set(current)
+
+btn_values = [
+    ['C', '-/+', 'Del', 'SET'],
+    ['7', '8', '9', '/'],
+    ['4', '5', '6', '*'],
+    ['1', '2', '3', '-'],
+    ['.', '0', '=', '+'],
+]
+
+for row in btn_values:
+    row_frame = tk.Frame(buttons_frame)
+    row_frame.pack(side = 'top', fill = 'x')
+    for btn_val in row:
+        if btn_val == "SET":
+            button = tk.Button(row_frame, text = str(btn_val), width = 5, command = new_window)
+        else:
+            button = tk.Button(row_frame, text = str(btn_val), width = 5, command = lambda btn_val=btn_val: button_click(str(btn_val)))
+        button.pack(side = 'left')
+
+root.mainloop()
